@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>贪吃蛇 Snake</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 主游戏界面 -->
+  <div class="app">
+    <!-- 游戏标题和语言切换 -->
+    <header class="header">
+      <h1 id="appTitle">贪吃蛇</h1>
+      <div class="lang-switch">
+        <button id="langZh" class="lang-btn active">中</button>
+        <button id="langEn" class="lang-btn">EN</button>
+      </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+      <!-- 中央游戏区域 -->
+       <main class="game-center">
+         <!-- HUD 信息显示 -->
+         <div class="hud">
+           <div class="hud-item">
+             <span id="labelScore">分数</span>
+             <span id="score">0</span>
+           </div>
+           <div class="hud-item">
+             <span id="labelBest">最高分</span>
+             <span id="best">0</span>
+           </div>
+           <div class="hud-item">
+             <span id="labelLevel">等级</span>
+             <span id="level">1</span>
+           </div>
+           <div class="hud-item">
+             <span id="labelMode">模式</span>
+             <span id="modeName">简单</span>
+           </div>
+         </div>
+
+         <!-- 游戏画布 -->
+         <div class="game-container">
+           <canvas id="board" width="480" height="480"></canvas>
+         </div>
+
+         <!-- 控制按钮 -->
+         <div class="controls">
+           <button id="btnStart" class="btn">开始</button>
+           <button id="btnPause" class="btn">暂停</button>
+           <button id="btnRestart" class="btn">重来</button>
+         </div>
+
+         <!-- 触控方向键 (移动端) -->
+         <div class="dpad">
+           <div class="dpad-row">
+             <div></div>
+             <button id="dpadUp" class="dpad-btn">↑</button>
+             <div></div>
+           </div>
+           <div class="dpad-row">
+             <button id="dpadLeft" class="dpad-btn">←</button>
+             <div></div>
+             <button id="dpadRight" class="dpad-btn">→</button>
+           </div>
+           <div class="dpad-row">
+             <div></div>
+             <button id="dpadDown" class="dpad-btn">↓</button>
+             <div></div>
+           </div>
+         </div>
+
+         <!-- 难度选择区域 -->
+         <div class="mode-section">
+           <h3 id="modeTitle">选择难度</h3>
+           <div class="mode-options">
+             <label class="mode-option">
+               <input type="radio" name="difficulty" value="easy" checked>
+               <span id="labelEasy">简单</span>
+             </label>
+             <label class="mode-option">
+               <input type="radio" name="difficulty" value="medium">
+               <span id="labelMedium">中等</span>
+             </label>
+             <label class="mode-option">
+               <input type="radio" name="difficulty" value="hard">
+               <span id="labelHard">困难</span>
+             </label>
+             <label class="mode-option">
+               <input type="radio" name="difficulty" value="inferno">
+               <span id="labelInferno">炼狱</span>
+             </label>
+           </div>
+           <button id="btnStartGame" class="btn-primary">开始游戏</button>
+         </div>
+       </main>
+      </div>
+  </div>
+
+  <!-- 玩法说明弹窗 -->
+  <div id="rulesModal" class="overlay">
+    <div class="modal-panel">
+      <h2 id="rulesModalTitle">游戏玩法说明</h2>
+      <div class="rules-content">
+        <div class="rule-item">
+          <h4 id="controlTitle">控制方式</h4>
+          <ul>
+            <li id="controlPC">电脑：方向键或 WASD 控制移动</li>
+            <li id="controlMobile">手机：使用屏幕下方的方向键</li>
+            <li id="controlKeys">空格键：开始/暂停游戏</li>
+            <li id="controlRestart">R键：重新开始游戏</li>
+          </ul>
+        </div>
+        <div class="rule-item">
+          <h4 id="gameplayTitle">游戏规则</h4>
+          <ul>
+            <li id="ruleEat">吃到食物可以获得1分并增长身体</li>
+            <li id="ruleLevel">达到分数阈值会提升等级和移动速度</li>
+            <li id="ruleCollision">撞到墙壁或自己的身体会游戏结束</li>
+            <li id="ruleDifficulty">选择不同难度会影响初始速度</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-buttons">
+        <button id="btnRulesOK" class="btn-primary">我知道了</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 游戏结束遮罩 -->
+  <div id="gameOver" class="overlay hidden">
+    <div class="over-panel">
+      <h2 id="overTitle">游戏结束</h2>
+      <p id="overScore">本次得分：<span id="finalScore">0</span></p>
+      <div class="over-buttons">
+        <button id="btnRestart2" class="btn-primary">再来一局</button>
+        <button id="btnCloseOver" class="btn-secondary">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
