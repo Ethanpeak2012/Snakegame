@@ -35,6 +35,7 @@
       ruleCollision: '撞到墙壁或自己的身体会游戏结束',
       ruleDifficulty: '选择不同难度会影响初始速度',
       rulesOK: '我知道了',
+      touchHint: '提示：在游戏区域滑动手指控制方向',
       overTitle: '游戏结束',
       overScore: '本次得分：',
       overRestart: '再来一局',
@@ -72,6 +73,7 @@
       ruleCollision: 'Hitting walls or your own body ends the game',
       ruleDifficulty: 'Different difficulties affect initial speed',
       rulesOK: 'Got it!',
+      touchHint: 'Tip: Swipe on game area to control direction',
       overTitle: 'Game Over',
       overScore: 'Your Score: ',
       overRestart: 'Play Again',
@@ -225,6 +227,9 @@
     // 更新语言按钮状态
     langZh.classList.toggle('active', lang === 'zh');
     langEn.classList.toggle('active', lang === 'en');
+
+    // 更新触控提示
+    document.documentElement.style.setProperty('--touch-hint', `"${t.touchHint}"`);
 
     document.title = `${i18n.zh.title} ${i18n.en.title}`;
   }
@@ -469,6 +474,63 @@
   bindDpad(dpadDown, { x: 0, y: 1 });
   bindDpad(dpadLeft, { x: -1, y: 0 });
   bindDpad(dpadRight, { x: 1, y: 0 });
+
+  // 手指滑动控制
+    let touchStartX = 0;
+    let touchStartY = 0;
+    const minSwipeDistance = 50; // 最小滑动距离，增加以避免误触
+
+  // 在游戏画布上添加触摸事件
+  board.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+  }, { passive: false });
+
+  board.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    if (!e.changedTouches[0]) return;
+    
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - touchStartX;
+    const deltaY = touch.clientY - touchStartY;
+    
+    // 计算滑动距离
+    const absDeltaX = Math.abs(deltaX);
+    const absDeltaY = Math.abs(deltaY);
+    
+    // 检查是否达到最小滑动距离
+    if (Math.max(absDeltaX, absDeltaY) < minSwipeDistance) {
+      return;
+    }
+    
+    // 确定滑动方向（优先较大的位移方向）
+    if (absDeltaX > absDeltaY) {
+      // 水平滑动
+      if (deltaX > 0) {
+        // 向右滑动
+        if (dir.x !== -1) nextDir = { x: 1, y: 0 };
+      } else {
+        // 向左滑动
+        if (dir.x !== 1) nextDir = { x: -1, y: 0 };
+      }
+    } else {
+      // 垂直滑动
+      if (deltaY > 0) {
+        // 向下滑动
+        if (dir.y !== -1) nextDir = { x: 0, y: 1 };
+      } else {
+        // 向上滑动
+        if (dir.y !== 1) nextDir = { x: 0, y: -1 };
+      }
+    }
+  }, { passive: false });
+
+  // 防止触摸时页面滚动
+  board.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+  }, { passive: false });
 
   // 按钮事件
   btnStart.addEventListener('click', () => startGame());
